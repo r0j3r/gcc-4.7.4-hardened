@@ -112,7 +112,8 @@ along with GCC; see the file COPYING3.  If not see
    %{mpc32:crtprec32.o%s} \
    %{mpc64:crtprec64.o%s} \
    %{mpc80:crtprec80.o%s} \
-   %{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
+   %{shared|pie:crtendS.o%s;static|nopie|pg|p|profile:crtend.o%s;:crtendS.o%s} \
+   crtn.o%s"
 
 /* A C statement (sans semicolon) to output to the stdio stream
    FILE the assembler definition of uninitialized global DECL named

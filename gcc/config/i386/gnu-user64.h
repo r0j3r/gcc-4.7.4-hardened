@@ -92,7 +92,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    %{mpc32:crtprec32.o%s} \
    %{mpc64:crtprec64.o%s} \
    %{mpc80:crtprec80.o%s} \
-   %{shared|pie:crtendS.o%s;:crtend.o%s} crtn.o%s"
+   %{shared|pie:crtendS.o%s;static|nopie|pg|p|profile:crtend.o%s;:crtendS.o%s} \
+   crtn.o%s"
 
 #if TARGET_64BIT_DEFAULT
 #define MULTILIB_DEFAULTS { "m64" }

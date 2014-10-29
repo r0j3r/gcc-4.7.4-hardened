@@ -12433,6 +12433,31 @@ expand_builtin_object_size (tree exp)
   return object_size_type < 2 ? constm1_rtx : const0_rtx;
 }
 
+static void
+report_always_overflow_diagnostic (tree exp)
+{
+  static int tolerate_always_overflow = 0;
+
+  if (tolerate_always_overflow == 0)
+    {
+      const char *p = getenv("GCC_TOLERATE_ALWAYS_OVERFLOW");
+
+      if (p && p[0] == '1')
+       tolerate_always_overflow = 1;
+      else
+       tolerate_always_overflow = -1;
+    }
+
+  if (tolerate_always_overflow > 0)
+    warning_at (tree_nonartificial_location (exp),
+               0, "%Kcall to %D will always overflow destination buffer",
+               exp, get_callee_fndecl (exp));
+  else
+    error_at (tree_nonartificial_location (exp),
+             "%Kcall to %D will always overflow destination buffer",
+             exp, get_callee_fndecl (exp));
+}
+
 /* Expand EXP, a call to the __mem{cpy,pcpy,move,set}_chk builtin.
    FCODE is the BUILT_IN_* to use.
    Return NULL_RTX if we failed; the caller should emit a normal call,
@@ -12466,9 +12491,7 @@ expand_builtin_memory_chk (tree exp, rtx target, enum machine_mode mode,
 
       if (! integer_all_onesp (size) && tree_int_cst_lt (size, len))
 	{
-	  warning_at (tree_nonartificial_location (exp),
-		      0, "%Kcall to %D will always overflow destination buffer",
-		      exp, get_callee_fndecl (exp));
+          report_always_overflow_diagnostic (exp);
 	  return NULL_RTX;
 	}
 
@@ -12618,8 +12641,7 @@ maybe_emit_chk_warning (tree exp, enum built_in_function fcode)
   else if (! host_integerp (len, 1) || ! tree_int_cst_lt (size, len))
     return;
 
-  warning_at (loc, 0, "%Kcall to %D will always overflow destination buffer",
-	      exp, get_callee_fndecl (exp));
+   report_always_overflow_diagnostic (exp);
 }
 
 /* Emit warning if a buffer overflow is detected at compile time

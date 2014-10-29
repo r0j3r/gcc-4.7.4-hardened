@@ -8476,7 +8476,7 @@ branch target registers in within any basic block.
 Emit extra code to check for buffer overflows, such as stack smashing
 attacks.  This is done by adding a guard variable to functions with
 vulnerable objects.  This includes functions that call alloca, and
-functions with buffers larger than 8 bytes.  The guards are initialized
+functions with buffers larger than 4 bytes.  The guards are initialized
 when a function is entered and then checked when the function exits.
 If a guard check fails, an error message is printed and the program exits.
 

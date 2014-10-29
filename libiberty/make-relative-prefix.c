@@ -424,4 +424,3 @@ make_relative_prefix_ignore_links (const char *progname,
 {
   return make_relative_prefix_1 (progname, bin_prefix, prefix, 0);
 }
-

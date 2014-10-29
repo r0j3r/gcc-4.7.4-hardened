@@ -342,7 +342,7 @@ libiberty.html : $(srcdir)/libiberty.texi $(TEXISRC)
 @MAINT@	echo stamp > stamp-functions
 
 INSTALL_DEST = @INSTALL_DEST@
-install: install_to_$(INSTALL_DEST) install-subdir
+install: install-subdir
 install-strip: install
 
 .PHONY: install install-strip
@@ -1254,4 +1254,3 @@ $(CONFIGURED_OFILES): stamp-picdir
 	  $(COMPILE.c) $(PICFLAG) $(srcdir)/xstrndup.c -o pic/$@; \
 	else true; fi
 	$(COMPILE.c) $(srcdir)/xstrndup.c $(OUTPUT_OPTION)
-

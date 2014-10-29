@@ -1173,7 +1173,7 @@ parseAnnotationElement(jclass klass, _Jv_Constants *pool,
 	int cindex = read_u2 (bytes, last);
 	check_constant (pool, cindex, JV_CONSTANT_Double);
 	_Jv_word2 word;
-	memcpy (&word, &pool->data[cindex], 2 * sizeof (_Jv_word));
+	memcpy (&word, &pool->data[cindex], sizeof (word));
 	result = Double::valueOf (word.d);
       }
       break;
@@ -1189,7 +1189,7 @@ parseAnnotationElement(jclass klass, _Jv_Constants *pool,
 	int cindex = read_u2 (bytes, last);
 	check_constant (pool, cindex, JV_CONSTANT_Long);
 	_Jv_word2 word;
-	memcpy (&word, &pool->data[cindex], 2 * sizeof (_Jv_word));
+	memcpy (&word, &pool->data[cindex], sizeof (word));
 	result = Long::valueOf (word.l);
       }
       break;

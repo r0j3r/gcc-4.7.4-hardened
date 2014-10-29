@@ -611,7 +611,13 @@ proper position among the other output files.  */
 
 #ifndef LINK_PIE_SPEC
 #ifdef HAVE_LD_PIE
-#define LINK_PIE_SPEC "%{pie:-pie} "
+#define LINK_PIE_SPEC "%{pie:-pie}\
+  %{shared|Bshareable: %{!no-warn-shared-textrel:--warn-shared-textrel}}\
+  %{static|Bstatic|shared|Bshareable|i|r|pie|nopie:;:-pie %{!no-warn-shared-textrel:--warn-shared-textrel}}\
+  %{!static:%{!Bstatic: %{norelro:-z norelro;:-z relro}\
+  %{nocombreloc:-z nocombreloc;:-z combreloc}\
+  %{nonow:-z lazy;:-z now} }}\
+  %{!no-fatal-warnings:--fatal-warnings} "
 #else
 #define LINK_PIE_SPEC "%{pie:} "
 #endif
@@ -756,6 +762,7 @@ static const char *cpp_unique_options =
  %{remap} %{g3|ggdb3|gstabs3|gcoff3|gxcoff3|gvms3:-dD}\
  %{!iplugindir*:%{fplugin*:%:find-plugindir()}}\
  %{H} %C %{D*&U*&A*} %{i*} %Z %i\
+ %{!D_FORTIFY_SOURCE:%{!D_FORTIFY_SOURCE=*:%{!U_FORTIFY_SOURCE:-D_FORTIFY_SOURCE=2}}}\
  %{fmudflap:-D_MUDFLAP -include mf-runtime.h}\
  %{fmudflapth:-D_MUDFLAP -D_MUDFLAPTH -include mf-runtime.h}\
  %{E|M|MM:%W{o*}}";
@@ -788,8 +795,11 @@ static const char *cc1_options =
  %{-version:--version}\
  %{-help=*:--help=%*}\
  %{!fsyntax-only:%{S:%W{o*}%{!o*:-o %b.s}}}\
+ %{fpic|fPIC|fpie|fPIE|fno-pic|fno-PIC|fno-pie|fno-PIE|static|shared|nostdlib|nostartfiles|D__KERNEL__:;:-fPIE}\
+ %{static:%{pie:%e-static and -pie are incompatible}}\
  %{fsyntax-only:-o %j} %{-param*}\
  %{fmudflap|fmudflapth:-fno-builtin -fno-merge-constants}\
+ %{!fno-stack-protector:%{!nostdlib:-fstack-protector-all}}\
  %{coverage:-fprofile-arcs -ftest-coverage}";
 
 static const char *asm_options =
@@ -3628,7 +3638,7 @@ process_command (unsigned int decoded_options_count,
 #ifndef VMS
   /* FIXME: make_relative_prefix doesn't yet work for VMS.  */
   if (!gcc_exec_prefix)
-    {
+  {
       gcc_exec_prefix = get_relative_prefix (decoded_options[0].arg,
 					     standard_bindir_prefix,
 					     standard_exec_prefix);
