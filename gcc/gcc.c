@@ -762,7 +762,8 @@ static const char *cpp_unique_options =
  %{remap} %{g3|ggdb3|gstabs3|gcoff3|gxcoff3|gvms3:-dD}\
  %{!iplugindir*:%{fplugin*:%:find-plugindir()}}\
  %{H} %C %{D*&U*&A*} %{i*} %Z %i\
- %{!D_FORTIFY_SOURCE:%{!D_FORTIFY_SOURCE=*:%{!U_FORTIFY_SOURCE:-D_FORTIFY_SOURCE=2}}}\
+ %{!U_FORTIFY_SOURCE:%{O0:%eFortify Source needs Optimization;:%{!O*:-O}\
+ %{!D_FORTIFY_SOURCE*:-D_FORTIFY_SOURCE=2}}}\
  %{fmudflap:-D_MUDFLAP -include mf-runtime.h}\
  %{fmudflapth:-D_MUDFLAP -D_MUDFLAPTH -include mf-runtime.h}\
  %{E|M|MM:%W{o*}}";
