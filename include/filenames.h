@@ -84,6 +84,8 @@ extern int filename_cmp (const char *s1, const char *s2);
 extern int filename_ncmp (const char *s1, const char *s2,
 			  size_t n);
 
+extern int canonical_filename_eq (const char *a, const char *b);
+
 #ifdef __cplusplus
 }
 #endif
